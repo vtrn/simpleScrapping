@@ -18,7 +18,6 @@ class Dispatcher:
             print('Образец: \n[test.py [https://имя_сайта_/путь_к_статье]]')
             raise SystemExit
         check = self.check_url(sys.argv[1])
-        print(check)
         if check:
             return sys.argv[1]
         else:

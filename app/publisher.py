@@ -63,7 +63,6 @@ class Corrector:
                     new_par.append(' '.join(string))
                     string = []
             post.append(new_par)
-            print(post)
         return post
 
 class Writer:
