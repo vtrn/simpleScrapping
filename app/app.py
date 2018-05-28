@@ -6,9 +6,11 @@ from urllib.parse import urlparse
 if __name__ == '__main__':
     from parser import *
     from publisher import *
+    from config import *
 else:
     from app.parser import *
     from app.publisher import *
+    from app.config import *
 
 class Dispatcher:
     def get_argv(self):
@@ -37,11 +39,11 @@ class Dispatcher:
 
     def handle(self):
         url = self.get_argv()
-        post = Post(url)
-        corrector = Corrector(post.post)
-        corrector.handle()
+        post = Parser(url)
+        corrector = Corrector(post.post, Config().size)
+        corrector.processesCorrector()
         writer = Writer(url, corrector.post)
-        writer.hadle()
+        writer.write()
 
 
 
