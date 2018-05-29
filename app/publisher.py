@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+
+
 import re
 
 
@@ -10,6 +13,9 @@ class Corrector:
         self.post = None
 
     def processesCorrector(self):
+        """Процесс редактирования сырых данных
+
+        """
         start = 0
         pattern = lambda x: 'LINK' in x
 
@@ -27,36 +33,57 @@ class Corrector:
         self.get_size()
 
     def search_links(self, line):
+        """Поиск ссылок
+
+        """
         new_links = re.findall(r'<a\s.*?href="(.+?)".*?>(.+?)</a>', line)
         if new_links:
             self.links.append(new_links)
 
     def search_head(self, line):
-        new_line = re.sub(r'<strong>' or r'</strong>', '999', line)
+        """Поиск заголовок
+
+        """
+        new_line = re.sub(r'<h1>', '999', line)
         return new_line
 
     def replace_links(self, line):
+        """Замена ссылок на ключевое слово
+
+        """
         new_line = ''
         new_line += re.sub(r'<a\s.*?href="(.+?)".*?>(.+?)</a>', 'LINK', line)
         return new_line
 
     def clear_line(self, line):
+        """Чистка сырых строк
+
+        """
         new_line = re.sub(r'(?:<).*?(?:>)', '', line)
         for x in ['\n', '\t', '\r']:
             new_line = new_line.replace(x, '')
         return new_line
 
     def create_new_links(self, line, start=0, step=0, end=0):
+        """создает новые ссылки согласно формату
+
+        """
         new_line = ''
         new_line += re.sub('LINK', '[' + self.links[start][step][end] + ']' + ' ' + self.links[start][step][end + 1],
                            line)
         return new_line
 
     def search_indent(self, line):
+        """поиск тега и замена ключевым символом
+
+         """
         new_line = line.replace('<p>', '000')
         return new_line
 
     def get_size(self):
+        """создает новое тело
+
+        """
         self.post = []
         for param in self.new_body:
             gen = self.split_by_spaces(param, self.size)
@@ -68,6 +95,9 @@ class Corrector:
                     break
 
     def split_by_spaces(self, string, length):
+        """ форматирует строки, согласно настройкам
+
+        """
         lower_bound = 0
         upper_bound = 0
         last_space_position = string.rindex(' ')
@@ -90,6 +120,9 @@ class Writer:
         self.obj = obj
 
     def write(self):
+        """Записывает данные в новый файл
+
+        """
         name = re.sub(r'/', '_', self.file_name)
         w = open(name, 'w')
         for st in self.obj:
